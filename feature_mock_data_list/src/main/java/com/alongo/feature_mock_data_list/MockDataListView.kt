@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
@@ -37,7 +38,7 @@ fun MockDataListView(viewModel: MockDataListViewModel) {
             }
         }
 
-        is MockDataListViewModel.State.LoadingData -> {
+        is MockDataListViewModel.State.Idle, MockDataListViewModel.State.LoadingData -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
@@ -45,6 +46,7 @@ fun MockDataListView(viewModel: MockDataListViewModel) {
     }
 
     LaunchedEffect(key1 = Unit) {
+        viewModel.handleEvent(MockDataListViewModel.Event.OnScreenAppeared)
         viewModel.handleEvent(MockDataListViewModel.Event.RequestData)
     }
 }
