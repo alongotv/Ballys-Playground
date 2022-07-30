@@ -6,12 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alongo.ballysplayground.core.data.datasource.database.mock.MockDataDao
 import com.alongo.ballysplayground.core.domain.entity.database.MockData
-import com.alongo.ballysplayground.core.utils.throttleFirst
+import com.alongo.ballysplayground.core.utils.throttleLatest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import kotlinx.coroutines.withContext
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDataDao) :
@@ -24,6 +27,7 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
         object OnScreenAppeared : Event
         object RequestData : Event
         data class OnDataUpdated(val mockData: MockData, val newValue: String) : Event
+        data class OnDataDismissed(val mockData: MockData) : Event
         object OnDataCreated : Event
     }
 
@@ -34,16 +38,14 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
     }
 
     fun handleEvent(event: Event) {
-        viewModelScope.launch {
-            when (val currentState = state.value) {
-                is State.LoadingData -> reduce(event, currentState)
-                is State.DataReady -> reduce(event, currentState)
-                is State.Idle -> reduce(event, currentState)
-            }
+        when (val currentState = state.value) {
+            is State.LoadingData -> reduce(event, currentState)
+            is State.DataReady -> reduce(event, currentState)
+            is State.Idle -> reduce(event, currentState)
         }
     }
 
-    private suspend fun reduce(
+    private fun reduce(
         event: Event,
         state: State.Idle
     ) {
@@ -52,15 +54,28 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
             Event.OnDataCreated -> Unit
             is Event.OnDataUpdated -> Unit
             Event.RequestData -> requestMockData()
+            is Event.OnDataDismissed -> Unit
         }
     }
 
-    private suspend fun reduce(event: Event, state: State.DataReady) {
+    private fun reduce(event: Event, state: State.DataReady) {
         when (event) {
             Event.RequestData -> requestMockData()
             is Event.OnDataUpdated -> enqueueMockDataUpdate(event, state)
             is Event.OnDataCreated -> createMockData()
             Event.OnScreenAppeared -> Unit
+            is Event.OnDataDismissed -> removeMockData(event)
+        }
+    }
+
+    private fun removeMockData(event: Event.OnDataDismissed) {
+        viewModelScope.launch {
+            withContext(NonCancellable) {
+                mockDataDao.deleteMockData(event.mockData)
+                val newData = mockDataDao.getAllMockData()
+                state.value = State.DataReady(newData)
+                println("Item has been removed")
+            }
         }
     }
 
@@ -70,19 +85,26 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
             is Event.OnDataUpdated -> throw IllegalStateException("Cannot update the data while loading is in progress")
             is Event.OnDataCreated -> throw IllegalStateException("Cannot create the data while loading is in progress")
             Event.OnScreenAppeared -> Unit
+            is Event.OnDataDismissed -> throw IllegalStateException("Cannot dismiss the data while loading is in progress")
         }
     }
 
-    private suspend fun createMockData() {
-        mockDataDao.insertMockData(MockData(text = "Text"))
-        state.value = State.DataReady(mockDataDao.getAllMockData())
+    private fun createMockData() {
+        viewModelScope.launch {
+            withContext(NonCancellable) {
+                mockDataDao.insertMockData(MockData(text = ""))
+                state.value = State.DataReady(mockDataDao.getAllMockData())
+            }
+        }
     }
 
     private val dataUpdateRequestFlow =
         MutableSharedFlow<Triple<MockData, String, State.DataReady>>()
 
-    private suspend fun enqueueMockDataUpdate(event: Event.OnDataUpdated, state: State.DataReady) {
-        dataUpdateRequestFlow.emit(Triple(event.mockData, event.newValue, state))
+    private fun enqueueMockDataUpdate(event: Event.OnDataUpdated, state: State.DataReady) {
+        viewModelScope.launch {
+            dataUpdateRequestFlow.emit(Triple(event.mockData, event.newValue, state))
+        }
     }
 
     private fun subscribeToMockDataUpdates() {
@@ -96,15 +118,20 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
 
                 state.value = State.DataReady(updatedDataList)
             }
-                .throttleFirst(150).collect { element ->
-                    mockDataDao.updateMockData(element.first.copy(text = element.second))
+                .throttleLatest(1.seconds)
+                .collect { element ->
+                    withContext(NonCancellable) {
+                        mockDataDao.updateMockData(element.first.copy(text = element.second))
+                    }
                 }
         }
     }
 
-    private suspend fun requestMockData() {
-        state.value = State.LoadingData
-        val mockDataList = mockDataDao.getAllMockData()
-        state.value = State.DataReady(mockDataList)
+    private fun requestMockData() {
+        viewModelScope.launch {
+            state.value = State.LoadingData
+            val mockDataList = mockDataDao.getAllMockData()
+            state.value = State.DataReady(mockDataList)
+        }
     }
 }
