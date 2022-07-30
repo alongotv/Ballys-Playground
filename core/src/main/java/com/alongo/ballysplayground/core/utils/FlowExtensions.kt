@@ -1,7 +1,10 @@
 package com.alongo.ballysplayground.core.utils
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
+import kotlin.time.Duration
 
 fun <T> Flow<T>.throttleFirst(windowDuration: Long): Flow<T> = flow {
     var windowStartTime = System.currentTimeMillis()
@@ -19,3 +22,11 @@ fun <T> Flow<T>.throttleFirst(windowDuration: Long): Flow<T> = flow {
         }
     }
 }
+
+fun <T> Flow<T>.throttleLatest(period: Duration): Flow<T> =
+    flow {
+        conflate().collect {
+            emit(it)
+            delay(period)
+        }
+    }
