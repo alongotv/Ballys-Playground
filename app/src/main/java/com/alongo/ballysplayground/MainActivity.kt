@@ -12,9 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.alongo.ballysplayground.ui.theme.BallysPlaygroundTheme
-import com.alongo.navigation.hosts.NavigationHost
-import com.alongo.navigation.hosts.NavigationHostType
-import com.alongo.navigation.hosts.main.MainNavigationDestination
+import com.alongo.nav_destinations.main.MainNavigationDestination
+import com.alongo.navigation_main.hosts.MainNavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,7 +29,10 @@ class MainActivity : ComponentActivity() {
             BallysPlaygroundTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    NavigationHost(navHostController = navHostController, NavigationHostType.Main(MainNavigationDestination.Welcome))
+                    MainNavigationHost(
+                        navHostController = navHostController,
+                        startDestination = MainNavigationDestination.Welcome
+                    )
                 }
             }
         }

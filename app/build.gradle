@@ -50,7 +50,6 @@ android {
 dependencies {
     //region Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    implementation project(path: ':navigation')
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_nav_version"
     //endregion
@@ -65,8 +64,10 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
-    api project(path: ':core')
-    api project(path: ':feature_welcome')
+
+    implementation project(path: ':navigation')
+    implementation project(path: ':navigation_host_main')
+    implementation project(path: ':nav_destinations')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

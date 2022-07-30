@@ -1,4 +1,4 @@
-package com.alongo.navigation
+package com.alongo.nav_destinations
 
 import org.junit.Test
 

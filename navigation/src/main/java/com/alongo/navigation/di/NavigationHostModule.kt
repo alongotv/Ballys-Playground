@@ -9,16 +9,20 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(SingletonComponent::class)
 class NavigationHostModule {
 
     @Provides
-    fun provideNavHostController(@ActivityContext context: Context): NavHostController {
-        return NavHostController(context).apply {
+    @Singleton
+    fun provideNavHostController(@ApplicationContext context: Context): NavHostController = NavHostController(context).apply {
             navigatorProvider.addNavigator(ComposeNavigator())
             navigatorProvider.addNavigator(DialogNavigator())
         }
-    }
 }

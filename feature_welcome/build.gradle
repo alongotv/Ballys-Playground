@@ -46,10 +46,13 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.5.1'
     // endregion
 
-    //region Hilt
+    // region Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation project(path: ':nav_destinations')
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    //endregion
+    // endregion
+
+    implementation project(path: ':navigation')
 
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
