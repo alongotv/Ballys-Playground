@@ -52,6 +52,7 @@ dependencies {
 
     implementation project(path: ':feature_welcome')
     implementation project(path: ':feature_mock_data_list')
+    implementation project(path: ':feature_timezones_list')
     implementation project(path: ':nav_destinations')
 
     testImplementation 'junit:junit:4.13.2'
