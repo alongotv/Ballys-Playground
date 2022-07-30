@@ -1,6 +1,7 @@
 package com.alongo.ballysplayground.core.domain.entity.networking
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "timezone")
-data class Timezone(val name: String, var timezone: String)
+data class Timezone(@PrimaryKey(autoGenerate = true) val id: Int? = null, val name: String, var timezone: String)
