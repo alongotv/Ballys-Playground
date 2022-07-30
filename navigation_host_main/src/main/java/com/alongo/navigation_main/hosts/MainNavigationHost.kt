@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.alongo.feature_mock_data_list.MockDataListView
+import com.alongo.feature_timezones_list.TimezonesListView
 import com.alongo.feature_welcome.WelcomeView
 import com.alongo.nav_destinations.main.MainNavigationDestination
 
@@ -18,9 +19,11 @@ fun MainNavigationHost(
         composable(MainNavigationDestination.Welcome) {
             WelcomeView(hiltViewModel())
         }
-
         composable(MainNavigationDestination.MockDataList) {
             MockDataListView(hiltViewModel())
+        }
+        composable(MainNavigationDestination.TimezonesList) {
+            TimezonesListView(hiltViewModel())
         }
     }
 }
