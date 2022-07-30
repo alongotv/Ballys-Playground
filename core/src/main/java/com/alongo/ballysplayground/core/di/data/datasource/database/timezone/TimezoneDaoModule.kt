@@ -5,9 +5,10 @@ import com.alongo.ballysplayground.core.data.datasource.database.timezone.Timezo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn
+@InstallIn(SingletonComponent::class)
 class TimezoneDaoModule {
     @Provides
     fun provideTimezoneDao(appDatabase: AppDatabase): TimezoneDao = appDatabase.timezoneDao()

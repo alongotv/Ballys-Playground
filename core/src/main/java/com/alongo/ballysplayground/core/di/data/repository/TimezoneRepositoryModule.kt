@@ -6,9 +6,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn
+@InstallIn(SingletonComponent::class)
 abstract class TimezoneRepositoryModule {
     @Binds
     abstract fun bindTimezoneRepository(timezoneRepositoryImpl: TimezoneRepositoryImpl): TimezoneRepository
