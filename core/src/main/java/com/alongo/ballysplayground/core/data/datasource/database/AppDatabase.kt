@@ -7,7 +7,7 @@ import com.alongo.ballysplayground.core.data.datasource.database.timezone.Timezo
 import com.alongo.ballysplayground.core.domain.entity.database.MockData
 import com.alongo.ballysplayground.core.domain.entity.database.Timezone
 
-@Database(entities = [MockData::class, Timezone::class], version = 1)
+@Database(entities = [MockData::class, Timezone::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun mockDataDao(): MockDataDao
     abstract fun timezoneDao(): TimezoneDao
