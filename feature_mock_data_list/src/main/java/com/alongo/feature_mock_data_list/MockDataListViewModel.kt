@@ -14,39 +14,62 @@ import javax.inject.Inject
 class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDataDao) :
     ViewModel() {
 
-    var state: MutableState<MockDataListState> = mutableStateOf(MockDataListState.LoadingData)
-    private set
+    var state: MutableState<State> = mutableStateOf(State.LoadingData)
+        private set
 
-    fun handleEvent(event: MockDataListEvent) {
+    sealed interface Event {
+        object RequestData : Event
+        data class OnDataUpdated(val mockData: MockData, val newValue: String) : Event
+        object OnDataCreated : Event
+    }
+
+    sealed interface State {
+        object LoadingData : State
+        data class DataReady(val data: List<MockData>) : State
+    }
+
+    fun handleEvent(event: Event) {
         when (val currentState = state.value) {
-            is MockDataListState.LoadingData -> reduce(event, currentState)
-            is MockDataListState.DataReady -> reduce(event, currentState)
+            is State.LoadingData -> reduce(event, currentState)
+            is State.DataReady -> reduce(event, currentState)
         }
     }
 
-    private fun reduce(event: MockDataListEvent, state: MockDataListState.DataReady) {
-
+    private fun reduce(event: Event, state: State.DataReady) {
+        when (event) {
+            Event.RequestData -> requestMockData()
+            is Event.OnDataUpdated -> updateMockData(event.mockData, event.newValue)
+            is Event.OnDataCreated -> createMockData()
+        }
     }
 
-    private fun reduce(event: MockDataListEvent, state: MockDataListState.LoadingData) {
+    private fun createMockData() {
+        viewModelScope.launch {
+            mockDataDao.insertMockData(MockData(text = "Text"))
+            state.value = State.DataReady(mockDataDao.getAllMockData())
+        }
+    }
+
+    private fun updateMockData(mockData: MockData, text: String) {
+        viewModelScope.launch {
+            mockDataDao.updateMockData(mockData.copy(text = text))
+            state.value = State.DataReady(mockDataDao.getAllMockData())
+        }
+    }
+
+    private fun reduce(event: Event, state: State.LoadingData) {
         when (event) {
-            MockDataListEvent.RequestData -> requestMockData()
+            Event.RequestData -> requestMockData()
+            is Event.OnDataUpdated -> throw IllegalStateException("Cannot update the data while loading is in progress")
+            is Event.OnDataCreated -> throw IllegalStateException("Cannot create the data while loading is in progress")
         }
     }
 
     private fun requestMockData() {
         viewModelScope.launch {
+            state.value = State.LoadingData
             val mockDataList = mockDataDao.getAllMockData()
-            state.value = MockDataListState.DataReady(mockDataList)
+            state.value = State.DataReady(mockDataList)
         }
     }
-}
-
-sealed interface MockDataListEvent {
-    object RequestData : MockDataListEvent
-}
-
-sealed interface MockDataListState {
-    object LoadingData : MockDataListState
-    data class DataReady(val data: List<MockData>) : MockDataListState
 }
