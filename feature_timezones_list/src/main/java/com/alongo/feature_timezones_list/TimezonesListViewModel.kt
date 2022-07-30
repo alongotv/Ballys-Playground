@@ -25,7 +25,6 @@ class TimezonesListViewModel @Inject constructor(private val timezoneRepository:
     }
 
     private suspend fun startTimeUpdates() {
-        delay(1000L)
         val localTimezones = ArrayList(displayTimezones)
 
         displayTimezones.clear()
@@ -34,6 +33,7 @@ class TimezonesListViewModel @Inject constructor(private val timezoneRepository:
             simpleDateFormat.timeZone = TimeZone.getTimeZone(it.timezone)
             DisplayTimezone(name = it.name, timezone = it.timezone, currentTime = simpleDateFormat.format(Calendar.getInstance().time))
         })
+        delay(1000L)
         startTimeUpdates()
     }
 }
