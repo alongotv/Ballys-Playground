@@ -1,6 +1,7 @@
 package com.alongo.ballysplayground.core.data.datasource.database.mock
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -17,6 +18,9 @@ interface MockDataDao {
 
     @Update
     suspend fun updateMockData(mockData: MockData)
+
+    @Delete
+    suspend fun deleteMockData(mockData: MockData)
 
     @Query("DELETE from mockData")
     suspend fun deleteAll()
