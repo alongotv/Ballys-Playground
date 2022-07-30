@@ -3,7 +3,7 @@ package com.alongo.ballysplayground.core.data.repository
 import com.alongo.ballysplayground.core.data.datasource.database.timezone.TimezoneDao
 import com.alongo.ballysplayground.core.data.datasource.networking.timezone.TimezoneApi
 import com.alongo.ballysplayground.core.domain.entity.networking.DisplayTimezone
-import com.alongo.ballysplayground.core.domain.entity.networking.Timezone
+import com.alongo.ballysplayground.core.domain.entity.database.Timezone
 import com.alongo.ballysplayground.core.domain.entity.networking.TimezoneDto
 import com.alongo.ballysplayground.core.domain.repository.TimezoneRepository
 import com.alongo.ballysplayground.core.domain.mapper.DtoModelMapper

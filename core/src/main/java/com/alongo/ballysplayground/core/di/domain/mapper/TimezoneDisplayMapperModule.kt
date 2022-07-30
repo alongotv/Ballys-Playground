@@ -1,7 +1,7 @@
 package com.alongo.ballysplayground.core.di.domain.mapper
 
 import com.alongo.ballysplayground.core.domain.entity.networking.DisplayTimezone
-import com.alongo.ballysplayground.core.domain.entity.networking.Timezone
+import com.alongo.ballysplayground.core.domain.entity.database.Timezone
 import com.alongo.ballysplayground.core.domain.mapper.ModelDisplayMapper
 import com.alongo.ballysplayground.core.domain.mapper.timezone.TimezoneDisplayMapper
 import dagger.Module

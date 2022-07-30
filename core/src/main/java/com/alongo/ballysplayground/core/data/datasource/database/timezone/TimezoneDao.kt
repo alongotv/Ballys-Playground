@@ -3,7 +3,7 @@ package com.alongo.ballysplayground.core.data.datasource.database.timezone
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.alongo.ballysplayground.core.domain.entity.networking.Timezone
+import com.alongo.ballysplayground.core.domain.entity.database.Timezone
 
 @Dao
 interface TimezoneDao {

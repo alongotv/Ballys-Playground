@@ -1,4 +1,4 @@
-package com.alongo.ballysplayground.core.domain.entity.networking
+package com.alongo.ballysplayground.core.domain.entity.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
