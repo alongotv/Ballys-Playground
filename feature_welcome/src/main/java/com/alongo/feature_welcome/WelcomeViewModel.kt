@@ -15,6 +15,7 @@ class WelcomeViewModel @Inject constructor(private val navHostController: NavHos
 
     sealed interface Event {
         object OnOpenMockDataListClicked : Event
+        object OnOpenTimezonesListClicked : Event
     }
 
     sealed interface State {
@@ -33,16 +34,11 @@ class WelcomeViewModel @Inject constructor(private val navHostController: NavHos
     }
 
     private fun reduce(event: Event, state: State.Idle) {
-        when(event) {
+        when (event) {
             is Event.OnOpenMockDataListClicked -> {
                 navHostController.navigate(MainNavigationDestination.MockDataList)
             }
-        }
-    }
-
-    fun foo() {
-        viewModelScope.launch {
-
+            Event.OnOpenTimezonesListClicked -> navHostController.navigate(MainNavigationDestination.TimezonesList)
         }
     }
 }
