@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mock_data_list_create_entry">Create Data Entry</string>
+    <string name="mock_data_list_entry_hint">Enter text...</string>
+</resources>
