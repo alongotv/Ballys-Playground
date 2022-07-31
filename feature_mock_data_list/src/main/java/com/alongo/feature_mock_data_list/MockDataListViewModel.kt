@@ -8,13 +8,13 @@ import com.alongo.ballysplayground.core.data.datasource.database.mock.MockDataDa
 import com.alongo.ballysplayground.core.domain.entity.database.MockData
 import com.alongo.ballysplayground.core.utils.throttleLatest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration.Companion.seconds
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDataDao) :
@@ -117,7 +117,7 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
 
                 state.value = State.DataReady(updatedDataList)
             }
-                .throttleLatest(1.seconds)
+                .throttleLatest(200.milliseconds)
                 .collect { element ->
                     withContext(NonCancellable) {
                         mockDataDao.updateMockData(element.first.copy(text = element.second))
