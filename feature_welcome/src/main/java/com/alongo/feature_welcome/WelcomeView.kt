@@ -8,16 +8,17 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun WelcomeView(welcomeViewModel: WelcomeViewModel) {
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Button(onClick = { welcomeViewModel.handleEvent(WelcomeViewModel.Event.OnOpenMockDataListClicked) }) {
-            Text(text = "Open Mock Data List")
+            Text(text = stringResource(R.string.welcome_open_data_list_title))
         }
 
         Button(onClick = { welcomeViewModel.handleEvent(WelcomeViewModel.Event.OnOpenTimezonesListClicked) }) {
-            Text(text = "Open Timezones List")
+            Text(text = stringResource(R.string.welcome_open_timezones_list_title))
         }
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_open_data_list_title">Open Mock Data List</string>
+    <string name="welcome_open_timezones_list_title">Open Timezones List</string>
+</resources>

@@ -74,7 +74,6 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
                 mockDataDao.deleteMockData(event.mockData)
                 val newData = mockDataDao.getAllMockData()
                 state.value = State.DataReady(newData)
-                println("Item has been removed")
             }
         }
     }

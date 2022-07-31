@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.alongo.design_system.presentation.AppTextField
 
@@ -54,14 +55,14 @@ fun MockDataListView(viewModel: MockDataListViewModel) {
                                     newValue
                                 )
                             )
-                        }, placeholder = { Text(text = "Enter text...") })
+                        }, placeholder = { Text(text = stringResource(R.string.mock_data_list_entry_hint)) })
                         Divider(color = Color.Black)
                     }
                 }
 
                 item {
                     Button(onClick = { viewModel.handleEvent(MockDataListViewModel.Event.OnDataCreated) }) {
-                        Text(text = "Create Data")
+                        Text(text = stringResource(R.string.mock_data_list_create_entry))
                     }
                 }
             }
