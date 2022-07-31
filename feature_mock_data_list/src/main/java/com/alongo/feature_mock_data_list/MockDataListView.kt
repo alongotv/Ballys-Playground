@@ -37,8 +37,7 @@ fun MockDataListView(viewModel: MockDataListViewModel) {
                 items(state.data) { item ->
                     val dismissState = DismissState(initialValue = DismissValue.Default,
                         confirmStateChange = {
-                            println(it)
-                            if (it != DismissValue.Default)
+                            if (it == DismissValue.DismissedToStart)
                                 viewModel.handleEvent(MockDataListViewModel.Event.OnDataDismissed(item))
                             false
                         }
