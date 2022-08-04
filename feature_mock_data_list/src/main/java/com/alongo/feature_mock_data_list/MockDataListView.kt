@@ -77,6 +77,6 @@ fun MockDataListView(viewModel: MockDataListViewModel) {
 
     LaunchedEffect(key1 = Unit) {
         viewModel.handleEvent(MockDataListViewModel.Event.OnScreenAppeared)
-        viewModel.handleEvent(MockDataListViewModel.Event.RequestData)
+        viewModel.handleEvent(MockDataListViewModel.Event.OnDataRequested)
     }
 }

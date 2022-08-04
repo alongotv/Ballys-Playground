@@ -25,7 +25,7 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
 
     sealed interface Event {
         object OnScreenAppeared : Event
-        object RequestData : Event
+        object OnDataRequested : Event
         data class OnDataUpdated(val mockData: MockData, val newValue: String) : Event
         data class OnDataDismissed(val mockData: MockData) : Event
         object OnDataCreated : Event
@@ -53,14 +53,14 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
             Event.OnScreenAppeared -> subscribeToMockDataUpdates()
             Event.OnDataCreated -> Unit
             is Event.OnDataUpdated -> Unit
-            Event.RequestData -> requestMockData()
+            Event.OnDataRequested -> requestMockData()
             is Event.OnDataDismissed -> Unit
         }
     }
 
     private fun reduce(event: Event, state: State.DataReady) {
         when (event) {
-            Event.RequestData -> requestMockData()
+            Event.OnDataRequested -> requestMockData()
             is Event.OnDataUpdated -> enqueueMockDataUpdate(event, state)
             is Event.OnDataCreated -> createMockData()
             Event.OnScreenAppeared -> Unit
@@ -80,7 +80,7 @@ class MockDataListViewModel @Inject constructor(private val mockDataDao: MockDat
 
     private fun reduce(event: Event, state: State.LoadingData) {
         when (event) {
-            Event.RequestData -> Unit
+            Event.OnDataRequested -> Unit
             is Event.OnDataUpdated -> throw IllegalStateException("Cannot update the data while loading is in progress")
             is Event.OnDataCreated -> throw IllegalStateException("Cannot create the data while loading is in progress")
             Event.OnScreenAppeared -> Unit
